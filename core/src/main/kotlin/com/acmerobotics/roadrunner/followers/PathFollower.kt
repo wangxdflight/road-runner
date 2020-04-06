@@ -3,7 +3,9 @@ package com.acmerobotics.roadrunner.followers
 import com.acmerobotics.roadrunner.drive.DriveSignal
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.path.Path
+<<<<<<< HEAD
 import com.acmerobotics.roadrunner.util.Angle
+import com.acmerobotics.roadrunner.util.Log
 import com.acmerobotics.roadrunner.util.NanoClock
 import kotlin.math.abs
 
@@ -56,6 +58,7 @@ abstract class PathFollower @JvmOverloads constructor(
      * @param currentPose current robot pose
      */
     fun update(currentPose: Pose2d): DriveSignal {
+        Log.dbgPrint(3);
         val pathEndError = path.end() - currentPose
         admissible = abs(pathEndError.x) < admissibleError.x &&
                 abs(pathEndError.y) < admissibleError.y &&

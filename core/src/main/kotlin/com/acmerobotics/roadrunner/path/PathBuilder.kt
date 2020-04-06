@@ -161,7 +161,7 @@ class PathBuilder private constructor(
      * @param endPosition end position
      */
     fun lineTo(endPosition: Vector2d): PathBuilder {
-        Log.dbgPrint(3);
+        Log.dbgPrint(5);
         val line = makeLine(endPosition)
         val interpolator = makeTangentInterpolator(line)
 
@@ -294,7 +294,7 @@ class PathBuilder private constructor(
      * Constructs the [Path] instance.
      */
     fun build(): Path {
-        Log.dbgPrint(3);
+        Log.dbgPrint(5);
         return Path(segments)
     }
 }

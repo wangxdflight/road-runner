@@ -7,6 +7,7 @@ package com.acmerobotics.roadrunner.util
 object Log {
 
     val enableLogging: Boolean = false
+
     @JvmStatic
     fun dbgPrint(level: Int) {
         if (enableLogging)

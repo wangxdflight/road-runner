@@ -3,7 +3,6 @@ package com.acmerobotics.roadrunner.followers
 import com.acmerobotics.roadrunner.drive.DriveSignal
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.path.Path
-<<<<<<< HEAD
 import com.acmerobotics.roadrunner.util.Angle
 import com.acmerobotics.roadrunner.util.Log
 import com.acmerobotics.roadrunner.util.NanoClock

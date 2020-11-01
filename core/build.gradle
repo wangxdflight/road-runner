@@ -1,4 +1,7 @@
 buildscript {
+    ext.kotlin_version = '1.4.10'
+    ext.detekt_version = '1.13.1'
+    ext.road_runner_version = '0.5.2'
     repositories {
         jcenter()
     }
@@ -12,7 +15,7 @@ buildscript {
 }
 
 plugins {
-    id 'kotlin'
+    id "org.jetbrains.kotlin.jvm" version "1.4.10"
     id 'java'
     id 'maven-publish'
 }
@@ -60,7 +63,6 @@ configurations {
 detekt {
     toolVersion = detekt_version
     input = files("src/main/kotlin", "src/test/kotlin", "src/integration-test/kotlin")
-    filters = ".*/resources/.*,.*/build/.*"
     config = files("$rootDir/detekt-config.yml")
 }
 

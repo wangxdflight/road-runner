@@ -85,7 +85,11 @@ object MecanumKinematics {
         wheelBase: Double = trackWidth,
         lateralMultiplier: Double = 1.0
     ): Pose2d {
+    Log.dbgPrint(3);
+
+
         Log.dbgPrint("MecanumKinematics: wheelToRobotVelocities ".plus(trackWidth).plus("   ").plus(wheelBase));
+
         val k = (trackWidth + wheelBase) / 2.0
         val (frontLeft, rearLeft, rearRight, frontRight) = wheelVelocities
         val r = Pose2d(

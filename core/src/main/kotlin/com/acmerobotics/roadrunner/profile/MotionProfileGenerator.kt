@@ -94,7 +94,7 @@ object MotionProfileGenerator {
                 // decel, accel
                 val roots = solveQuadratic(-maxAccel, 2 * start.v,
                         (goal.v * goal.v - start.v * start.v) / (2 * maxAccel) - goal.x + start.x)
-                val deltaT1 = roots.filter { it >= 0.0 }.min()!!
+                val deltaT1 = roots.filter { it >= 0.0 }.minOrNull()!!
                 val deltaT3 = abs(start.v - goal.v) / maxAccel + deltaT1
 
                 return MotionProfileBuilder(start)
@@ -105,7 +105,7 @@ object MotionProfileGenerator {
                 // accel, decel
                 val roots = solveQuadratic(maxAccel, 2 * start.v,
                         (start.v * start.v - goal.v * goal.v) / (2 * maxAccel) - goal.x + start.x)
-                val deltaT1 = roots.filter { it >= 0.0 }.min()!!
+                val deltaT1 = roots.filter { it >= 0.0 }.minOrNull()!!
                 val deltaT3 = abs(start.v - goal.v) / maxAccel + deltaT1
 
                 return MotionProfileBuilder(start)
@@ -254,7 +254,7 @@ object MotionProfileGenerator {
                         // we decelerated too much
                         val roots = solveQuadratic(-maxJerk, 2 * start.a,
                                 start.v - maxVel - start.a * start.a / (2 * maxJerk))
-                        val finalDeltaT1 = roots.filter { it >= 0.0 }.min()!!
+                        val finalDeltaT1 = roots.filter { it >= 0.0 }.minOrNull()!!
                         val finalDeltaT3 = finalDeltaT1 - start.a / maxJerk
 
                         MotionProfileBuilder(start)
@@ -275,7 +275,7 @@ object MotionProfileGenerator {
                     // cut out the constant accel phase and find a shorter delta t1 and delta t3
                     val roots = solveQuadratic(maxJerk, 2 * start.a,
                             start.v - maxVel + start.a * start.a / (2 * maxJerk))
-                    val newDeltaT1 = roots.filter { it >= 0.0 }.min()!!
+                    val newDeltaT1 = roots.filter { it >= 0.0 }.minOrNull()!!
                     val newDeltaT3 = newDeltaT1 + start.a / maxJerk
 
                     MotionProfileBuilder(start)

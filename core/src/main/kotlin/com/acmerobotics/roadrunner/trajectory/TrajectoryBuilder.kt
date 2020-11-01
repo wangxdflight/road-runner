@@ -83,9 +83,13 @@ class TrajectoryBuilder private constructor(
      * @param constraintsOverride segment-specific constraints
      */
     fun lineTo(endPosition: Vector2d, constraintsOverride: TrajectoryConstraints): TrajectoryBuilder {
+        val start = pathBuilder.build().length()
+    Log.dbgPrint(3);
+
         Log.dbgPrint(5)
 
         val start = pathBuilder.build().length()
+
 
         lineTo(endPosition)
 

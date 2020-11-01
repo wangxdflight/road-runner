@@ -62,7 +62,10 @@ abstract class ThreeTrackingWheelLocalizer(
     }
 
     override fun update() {
+    Log.dbgPrint(3);
+
         Log.dbgPrint("ThreeTrackingWheelLocalizer, update, to getWheelVelocities and then calculatePoseDelta, relativeOdometryUpdate");
+
         val wheelPositions = getWheelPositions()
         if (lastWheelPositions.isNotEmpty()) {
             val wheelDeltas = wheelPositions

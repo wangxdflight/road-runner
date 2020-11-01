@@ -5,7 +5,9 @@ package com.acmerobotics.roadrunner.util
  * Various Logging utilities.
  */
 object Log {
-    val enableLogging: Boolean = true
+
+    val enableLogging: Boolean = false
+
     @JvmStatic
     fun dbgPrint(level: Int) {
         if (enableLogging)
@@ -19,6 +21,8 @@ object Log {
         //Throwable.printStackTrace();
     }
     fun dbgPrint(s: String) {
-        println("$s");
+        if (enableLogging)
+            println("$s");
     }
+
 }

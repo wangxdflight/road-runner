@@ -114,7 +114,9 @@ class PIDFController
         measuredPosition: Double,
         measuredVelocity: Double? = null
     ): Double {
+        Log.dbgPrint(3);
         Log.dbgPrint("PIDFController: update, kP: ".plus(pid.kP.toString()));
+
         val currentTimestamp = clock.seconds()
         val error = getPositionError(measuredPosition)
         return if (lastUpdateTimestamp.isNaN()) {

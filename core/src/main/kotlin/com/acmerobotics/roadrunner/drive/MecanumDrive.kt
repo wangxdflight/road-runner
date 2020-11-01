@@ -53,6 +53,7 @@ abstract class MecanumDrive @JvmOverloads constructor(
         override fun update() {
             Log.dbgPrint(3);
 
+            Log.dbgPrint("MecanumLocalizer: update");
             val wheelPositions = drive.getWheelPositions()
             val extHeading = if (useExternalHeading) drive.externalHeading else Double.NaN
             if (lastWheelPositions.isNotEmpty()) {
@@ -93,6 +94,8 @@ abstract class MecanumDrive @JvmOverloads constructor(
     override fun setDriveSignal(driveSignal: DriveSignal) {
 
         Log.dbgPrint(3);
+        Log.dbgPrint("MecanumDrive: setDriveSignal");
+        Log.dbgPrint("  to robotToWheelVelocities/robotToWheelAccelerations and then calculateMotorFeedforward, finally setMotorPowers");
         val velocities = MecanumKinematics.robotToWheelVelocities(
             driveSignal.vel, trackWidth, wheelBase, lateralMultiplier)
         val accelerations = MecanumKinematics.robotToWheelAccelerations(
@@ -104,6 +107,7 @@ abstract class MecanumDrive @JvmOverloads constructor(
     override fun setDrivePower(drivePower: Pose2d) {
 
         Log.dbgPrint(3);
+        Log.dbgPrint("MecanumDrive: setDrivePower");
         val powers = MecanumKinematics.robotToWheelVelocities(
             drivePower, 1.0, 1.0, lateralMultiplier)
         setMotorPowers(powers[0], powers[1], powers[2], powers[3])

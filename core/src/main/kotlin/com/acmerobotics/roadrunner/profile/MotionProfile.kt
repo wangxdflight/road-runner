@@ -16,6 +16,7 @@ class MotionProfile(segments: List<MotionSegment>) {
      */
     operator fun get(t: Double): MotionState {
     Log.dbgPrint(3);
+    Log.dbgPrint("MotionProfile, get")
 
 
         var remainingTime = max(0.0, min(t, duration()))
@@ -60,6 +61,8 @@ class MotionProfile(segments: List<MotionSegment>) {
         val builder = MotionProfileBuilder(start())
         builder.appendProfile(this)
         builder.appendProfile(other)
+        Log.dbgPrint("MotionProfile, plus")
+
         return builder.build()
     }
 }

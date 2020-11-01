@@ -86,6 +86,10 @@ class TrajectoryBuilder private constructor(
         val start = pathBuilder.build().length()
     Log.dbgPrint(3);
 
+        Log.dbgPrint(5)
+
+        val start = pathBuilder.build().length()
+
 
         lineTo(endPosition)
 

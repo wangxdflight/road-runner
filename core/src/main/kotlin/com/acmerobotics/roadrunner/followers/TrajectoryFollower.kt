@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.drive.DriveSignal
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.trajectory.TrajectoryMarker
+import com.acmerobotics.roadrunner.util.Log
 import com.acmerobotics.roadrunner.util.Angle
 import com.acmerobotics.roadrunner.util.Log
 
@@ -44,6 +45,7 @@ abstract class TrajectoryFollower @JvmOverloads constructor(
      */
     open fun followTrajectory(trajectory: Trajectory) {
         Log.dbgPrint(5);
+        Log.dbgPrint("TrajectoryFollower: followTrajectory")
         this.startTimestamp = clock.seconds()
         this.trajectory = trajectory
         this.admissible = false
@@ -85,12 +87,15 @@ abstract class TrajectoryFollower @JvmOverloads constructor(
         }
 
         val trajEndError = trajectory.end() - currentPose
+        Log.dbgPrint("TrajectoryFollower: update, trajEndError: ".plus(trajEndError.toString()));
+
         admissible = abs(trajEndError.x) < admissibleError.x &&
                 abs(trajEndError.y) < admissibleError.y &&
                 abs(Angle.normDelta(trajEndError.heading)) < admissibleError.heading
         return if (internalIsFollowing() || executedFinalUpdate) {
             internalUpdate(currentPose, currentRobotVel)
         } else {
+            Log.dbgPrint("TrajectoryFollower: update, not following");
             for (marker in remainingMarkers) {
                 marker.callback.onMarkerReached()
             }

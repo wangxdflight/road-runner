@@ -55,6 +55,8 @@ class PathBuilder private constructor(
     private var segments = mutableListOf<PathSegment>()
 
     private fun makeLine(end: Vector2d): LineSegment {
+        Log.dbgPrint("PathBuilder, makeLine")
+
         val start = if (currentPose == null) {
             path!![s!!]
         } else {
@@ -69,6 +71,7 @@ class PathBuilder private constructor(
     }
 
     private fun makeSpline(endPosition: Vector2d, endTangent: Double): QuinticSpline {
+        Log.dbgPrint("PathBuilder, makeSpline")
         val startPose = if (currentPose == null) {
             path!![s!!]
         } else {
@@ -116,6 +119,7 @@ class PathBuilder private constructor(
     }
 
     private fun makeLinearInterpolator(endHeading: Double): LinearInterpolator {
+        Log.dbgPrint("PathBuilder, makeLinearInterpolator")
         val startHeading = currentPose?.heading ?: throw PathContinuityViolationException()
 
         return LinearInterpolator(startHeading, Angle.normDelta(endHeading - startHeading))
@@ -132,6 +136,8 @@ class PathBuilder private constructor(
     }
 
     private fun addSegment(segment: PathSegment): PathBuilder {
+        Log.dbgPrint("PathBuilder, addSegment")
+
         if (segments.isNotEmpty()) {
             val lastSegment = segments.last()
             if (!(lastSegment.end() epsilonEqualsHeading segment.start() &&
@@ -163,6 +169,7 @@ class PathBuilder private constructor(
     fun lineTo(endPosition: Vector2d): PathBuilder {
     Log.dbgPrint(3);
 
+        Log.dbgPrint("PathBuilder, lineTo, makeLine, makeTangentInterpolator and  addSegment")
         val line = makeLine(endPosition)
         val interpolator = makeTangentInterpolator(line)
 
@@ -208,6 +215,7 @@ class PathBuilder private constructor(
      * @param distance distance to travel forward
      */
     fun forward(distance: Double): PathBuilder {
+        Log.dbgPrint("PathBuilder: forward ".plus(distance))
         val start = if (currentPose == null) {
             path!![s!!]
         } else {
@@ -233,6 +241,7 @@ class PathBuilder private constructor(
      * @param distance distance to strafe left
      */
     fun strafeLeft(distance: Double): PathBuilder {
+        Log.dbgPrint("PathBuilder: strafeLeft ".plus(distance))
         val start = if (currentPose == null) {
             path!![s!!]
         } else {
@@ -258,7 +267,9 @@ class PathBuilder private constructor(
      * @param endTangent end tangent
      */
     fun splineTo(endPosition: Vector2d, endTangent: Double): PathBuilder {
+        Log.dbgPrint("PathBuilder: splineTo ")
         val spline = makeSpline(endPosition, endTangent)
+
         val interpolator = makeTangentInterpolator(spline)
 
         return addSegment(PathSegment(spline, interpolator))
@@ -297,6 +308,7 @@ class PathBuilder private constructor(
     fun build(): Path {
     Log.dbgPrint(3);
 
+        Log.dbgPrint("PathBuilder, build")
         return Path(segments)
     }
 }

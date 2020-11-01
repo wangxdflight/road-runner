@@ -41,6 +41,7 @@ class HolonomicPIDVAFollower @JvmOverloads constructor(
 
     override fun followTrajectory(trajectory: Trajectory) {
     Log.dbgPrint(3);
+        Log.dbgPrint("HolonomicPIDVAFollower: followTrajectory, to reset PIDController first and call parent follower")
         axialController.reset()
         lateralController.reset()
         headingController.reset()
@@ -51,6 +52,10 @@ class HolonomicPIDVAFollower @JvmOverloads constructor(
     override fun internalUpdate(currentPose: Pose2d, currentRobotVel: Pose2d?): DriveSignal {
     Log.dbgPrint(3);
 
+        Log.dbgPrint("HolonomicPIDVAFollower: internalUpdate");
+        Log.dbgPrint("  to get target vel, accel (fieldToRobotVelocity) from trajectory, and then targetRobotVel/Accel")
+        Log.dbgPrint("  and then calculatePoseError")
+        Log.dbgPrint("  and then PID controller update, finally drive signal")
         val t = elapsedTime()
 
         val targetPose = trajectory[t]
@@ -83,7 +88,10 @@ class HolonomicPIDVAFollower @JvmOverloads constructor(
         )
 
         lastError = poseError
-
+        Log.dbgPrint("lastPoseError: ".plus(lastError.toString()))
+        Log.dbgPrint("axialCorrection: ".plus(axialCorrection.toString()))
+        Log.dbgPrint("lateralCorrection: ".plus(lateralCorrection.toString()))
+        Log.dbgPrint("headingCorrection: ".plus(headingCorrection.toString()))
         return DriveSignal(correctedVelocity, targetRobotAccel)
     }
 }

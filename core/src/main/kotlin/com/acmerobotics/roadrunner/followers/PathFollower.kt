@@ -57,7 +57,8 @@ abstract class PathFollower @JvmOverloads constructor(
      * @param currentPose current robot pose
      */
     fun update(currentPose: Pose2d): DriveSignal {
-        Log.dbgPrint(5);
+    Log.dbgPrint(3);
+
         val pathEndError = path.end() - currentPose
         admissible = abs(pathEndError.x) < admissibleError.x &&
                 abs(pathEndError.y) < admissibleError.y &&

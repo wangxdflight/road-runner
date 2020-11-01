@@ -24,4 +24,5 @@ object Log {
         if (enableLogging)
             println("$s");
     }
+
 }

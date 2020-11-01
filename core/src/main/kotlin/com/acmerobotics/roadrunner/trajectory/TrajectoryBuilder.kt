@@ -84,7 +84,8 @@ class TrajectoryBuilder private constructor(
      */
     fun lineTo(endPosition: Vector2d, constraintsOverride: TrajectoryConstraints): TrajectoryBuilder {
         val start = pathBuilder.build().length()
-        Log.dbgPrint(5)
+    Log.dbgPrint(3);
+
 
         lineTo(endPosition)
 

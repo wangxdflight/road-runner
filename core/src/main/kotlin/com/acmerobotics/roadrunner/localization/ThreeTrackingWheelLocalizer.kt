@@ -58,7 +58,8 @@ abstract class ThreeTrackingWheelLocalizer(
     }
 
     override fun update() {
-        Log.dbgPrint(3);
+    Log.dbgPrint(3);
+
         val wheelPositions = getWheelPositions()
         if (lastWheelPositions.isNotEmpty()) {
             val wheelDeltas = wheelPositions

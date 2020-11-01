@@ -43,6 +43,7 @@ abstract class TrajectoryFollower @JvmOverloads constructor(
      * Follow the given [trajectory].
      */
     open fun followTrajectory(trajectory: Trajectory) {
+        Log.dbgPrint(5);
         this.startTimestamp = clock.seconds()
         this.trajectory = trajectory
         this.admissible = false
@@ -77,7 +78,8 @@ abstract class TrajectoryFollower @JvmOverloads constructor(
      */
     @JvmOverloads
     fun update(currentPose: Pose2d, currentRobotVel: Pose2d? = null): DriveSignal {
-        Log.dbgPrint(3);
+    Log.dbgPrint(3);
+
         while (remainingMarkers.size > 0 && elapsedTime() > remainingMarkers[0].time) {
             remainingMarkers.removeAt(0).callback.onMarkerReached()
         }

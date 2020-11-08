@@ -71,4 +71,16 @@ abstract class Drive {
      * The heading velocity used to determine pose velocity in some cases
      */
     open fun getExternalHeadingVelocity(): Double? = null
+
+    /**
+     * Returns the positions of the wheels in linear distance units. Positions should exactly match the ordering in
+     * [setMotorPowers].
+     */
+    abstract fun getWheelPositions(): List<Double>
+
+    /**
+     * Returns the velocities of the wheels in linear distance units. Positions should exactly match the ordering in
+     * [setMotorPowers].
+     */
+    open fun getWheelVelocities(): List<Double>? = null
 }

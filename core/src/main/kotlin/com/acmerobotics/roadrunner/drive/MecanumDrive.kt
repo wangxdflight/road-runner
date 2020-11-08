@@ -122,11 +122,11 @@ abstract class MecanumDrive @JvmOverloads constructor(
      * Returns the positions of the wheels in linear distance units. Positions should exactly match the ordering in
      * [setMotorPowers].
      */
-    abstract fun getWheelPositions(): List<Double>
+    //override fun getWheelPositions(): List<Double>
 
     /**
      * Returns the velocities of the wheels in linear distance units. Positions should exactly match the ordering in
      * [setMotorPowers].
      */
-    open fun getWheelVelocities(): List<Double>? = null
+    //override fun getWheelVelocities(): List<Double>? = null
 }

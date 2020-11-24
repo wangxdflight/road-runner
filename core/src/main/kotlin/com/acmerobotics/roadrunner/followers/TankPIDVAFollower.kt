@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.drive.DriveSignal
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.kinematics.Kinematics
 import com.acmerobotics.roadrunner.trajectory.Trajectory
+import com.acmerobotics.roadrunner.util.Log
 import com.acmerobotics.roadrunner.util.NanoClock
 
 /**
@@ -40,6 +41,10 @@ class TankPIDVAFollower @JvmOverloads constructor(
     }
 
     override fun internalUpdate(currentPose: Pose2d, currentRobotVel: Pose2d?): DriveSignal {
+        Log.dbgPrint("TankPIDVAFollower: internalUpdate");
+        Log.dbgPrint("  to get target vel, accel (fieldToRobotVelocity) from trajectory, and then targetRobotVel/Accel")
+        Log.dbgPrint("  and then calculatePoseError")
+        Log.dbgPrint("  and then position PID controller update, finally drive signal")
         val t = elapsedTime()
 
         val targetPose = trajectory[t]
@@ -69,7 +74,9 @@ class TankPIDVAFollower @JvmOverloads constructor(
         )
 
         lastError = poseError
-
+        Log.dbgPrint("lastPoseError: ".plus(lastError.toString()))
+        Log.dbgPrint("axialCorrection: ".plus(axialCorrection.toString()))
+        Log.dbgPrint("headingCorrection: ".plus(headingCorrection.toString()))
         return DriveSignal(correctedVelocity, targetRobotAccel)
     }
 }

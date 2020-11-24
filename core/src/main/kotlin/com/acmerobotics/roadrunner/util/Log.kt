@@ -6,7 +6,7 @@ package com.acmerobotics.roadrunner.util
  */
 object Log {
 
-    val enableLogging: Boolean = false
+    val enableLogging: Boolean = true
 
     @JvmStatic
     fun dbgPrint(level: Int) {
@@ -14,8 +14,9 @@ object Log {
             println("roadrunner")
         for (i in 1..level) {
             val trace = Exception().stackTrace[i]
-            if (enableLogging)
-                println(trace)
+            if (enableLogging) {
+                //println(trace)
+            }
         }
         //printLineNumber()
         //Throwable.printStackTrace();

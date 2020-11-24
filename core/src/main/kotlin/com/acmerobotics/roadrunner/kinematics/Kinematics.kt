@@ -41,7 +41,7 @@ object Kinematics {
      */
     @JvmStatic
     fun calculatePoseError(targetFieldPose: Pose2d, currentFieldPose: Pose2d) =
-        Pose2d(
+    Pose2d(
             (targetFieldPose - currentFieldPose).vec().rotated(-currentFieldPose.heading),
             Angle.normDelta(targetFieldPose.heading - currentFieldPose.heading)
         )
@@ -66,7 +66,7 @@ object Kinematics {
     @JvmStatic
     fun calculateMotorFeedforward(vel: Double, accel: Double, kV: Double, kA: Double, kStatic: Double): Double {
         val basePower = vel * kV + accel * kA
-        Log.dbgPrint("Kinematics: calculateMotorFeedforward: kV".plus(kV).plus(" kA: ".plus(kA)));
+        Log.dbgPrint("Kinematics: calculateMotorFeedforward: kV ".plus(kV).plus(" kA: ".plus(kA)));
         Log.dbgPrint(("  vel: ").plus(vel).plus(" accel: ").plus(accel));
 
         return if (basePower epsilonEquals 0.0) {

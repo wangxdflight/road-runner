@@ -32,8 +32,12 @@ class TankPIDVAFollower @JvmOverloads constructor(
     private val crossTrackController = PIDFController(crossTrackCoeffs)
 
     override var lastError: Pose2d = Pose2d()
-
+    init {
+        crossTrackController.setInputBounds(-Math.PI, Math.PI)
+    }
     override fun followTrajectory(trajectory: Trajectory) {
+        Log.dbgPrint("TankPIDVAFollower: followTrajectory, to reset PIDController first and call parent follower")
+
         axialController.reset()
         crossTrackController.reset()
 
@@ -50,6 +54,9 @@ class TankPIDVAFollower @JvmOverloads constructor(
         val targetPose = trajectory[t]
         val targetVel = trajectory.velocity(t)
         val targetAccel = trajectory.acceleration(t)
+        Log.dbgPrint("targetPose: ".plus(targetPose.toString()))
+        Log.dbgPrint("targetVel: ".plus(targetVel.toString()))
+        Log.dbgPrint("targetAccel: ".plus(targetAccel.toString()))
 
         val targetRobotVel = Kinematics.fieldToRobotVelocity(targetPose, targetVel)
         val targetRobotAccel = Kinematics.fieldToRobotAcceleration(targetPose, targetVel, targetAccel)
@@ -58,10 +65,10 @@ class TankPIDVAFollower @JvmOverloads constructor(
 
         // you can pass the error directly to PIDFController by setting setpoint = error and measurement = 0
         axialController.targetPosition = poseError.x
-        crossTrackController.targetPosition = poseError.y
+        crossTrackController.targetPosition = poseError.heading
 
         axialController.targetVelocity = targetRobotVel.x
-        crossTrackController.targetVelocity = targetRobotVel.y
+        crossTrackController.targetVelocity = targetRobotVel.heading
 
         // note: feedforward is processed at the wheel level
         val axialCorrection = axialController.update(0.0, currentRobotVel?.x)

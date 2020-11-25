@@ -61,6 +61,9 @@ class HolonomicPIDVAFollower @JvmOverloads constructor(
         val targetPose = trajectory[t]
         val targetVel = trajectory.velocity(t)
         val targetAccel = trajectory.acceleration(t)
+        Log.dbgPrint("targetPose: ".plus(targetPose.toString()))
+        Log.dbgPrint("targetVel: ".plus(targetVel.toString()))
+        Log.dbgPrint("targetAccel: ".plus(targetAccel.toString()))
 
         val targetRobotVel = Kinematics.fieldToRobotVelocity(targetPose, targetVel)
         val targetRobotAccel = Kinematics.fieldToRobotAcceleration(targetPose, targetVel, targetAccel)

@@ -92,6 +92,7 @@ abstract class TrajectoryFollower @JvmOverloads constructor(
                 abs(trajEndError.y) < admissibleError.y &&
                 abs(Angle.normDelta(trajEndError.heading)) < admissibleError.heading
         return if (internalIsFollowing() || executedFinalUpdate) {
+            Log.dbgPrint("TrajectoryFollower: update, following");
             internalUpdate(currentPose, currentRobotVel)
         } else {
             Log.dbgPrint("TrajectoryFollower: update, not following");

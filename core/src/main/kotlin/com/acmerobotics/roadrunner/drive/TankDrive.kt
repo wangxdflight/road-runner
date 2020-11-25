@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.kinematics.Kinematics
 import com.acmerobotics.roadrunner.kinematics.TankKinematics
 import com.acmerobotics.roadrunner.localization.Localizer
 import com.acmerobotics.roadrunner.util.Angle
+import com.acmerobotics.roadrunner.util.Log
 
 /**
  * This class provides the basic functionality of a tank/differential drive using [TankKinematics].
@@ -46,6 +47,9 @@ abstract class TankDrive constructor(
         private var lastExtHeading = Double.NaN
 
         override fun update() {
+            Log.dbgPrint(3);
+
+            Log.dbgPrint("TankLocalizer: update");
             val wheelPositions = drive.getWheelPositions()
             val extHeading = if (useExternalHeading) drive.externalHeading else Double.NaN
             if (lastWheelPositions.isNotEmpty()) {
@@ -79,6 +83,9 @@ abstract class TankDrive constructor(
     override var localizer: Localizer = TankLocalizer(this)
 
     override fun setDriveSignal(driveSignal: DriveSignal) {
+        Log.dbgPrint(3);
+        Log.dbgPrint("TankDrive: setDriveSignal");
+        Log.dbgPrint("  to robotToWheelVelocities/robotToWheelAccelerations and then calculateMotorFeedforward, finally setMotorPowers");
         val velocities = TankKinematics.robotToWheelVelocities(driveSignal.vel, trackWidth)
         val accelerations = TankKinematics.robotToWheelAccelerations(driveSignal.accel, trackWidth)
         val powers = Kinematics.calculateMotorFeedforward(velocities, accelerations, kV, kA, kStatic)

@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.kinematics.Kinematics
 import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.util.Log
 import com.acmerobotics.roadrunner.util.NanoClock
+import kotlin.math.sign
 
 /**
  * Traditional PID controller with feedforward velocity and acceleration components to follow a trajectory. More
@@ -32,9 +33,7 @@ class TankPIDVAFollower @JvmOverloads constructor(
     private val crossTrackController = PIDFController(crossTrackCoeffs)
 
     override var lastError: Pose2d = Pose2d()
-    init {
-        crossTrackController.setInputBounds(-Math.PI, Math.PI)
-    }
+
     override fun followTrajectory(trajectory: Trajectory) {
         Log.dbgPrint("TankPIDVAFollower: followTrajectory, to reset PIDController first and call parent follower")
 
@@ -61,18 +60,19 @@ class TankPIDVAFollower @JvmOverloads constructor(
         val targetRobotVel = Kinematics.fieldToRobotVelocity(targetPose, targetVel)
         val targetRobotAccel = Kinematics.fieldToRobotAcceleration(targetPose, targetVel, targetAccel)
 
-        val poseError = Kinematics.calculatePoseError(targetPose, currentPose)
+        val poseError = Kinematics.calculateRobotPoseError(targetPose, currentPose)
 
         // you can pass the error directly to PIDFController by setting setpoint = error and measurement = 0
         axialController.targetPosition = poseError.x
-        crossTrackController.targetPosition = poseError.heading
+        crossTrackController.targetPosition = poseError.y
 
         axialController.targetVelocity = targetRobotVel.x
-        crossTrackController.targetVelocity = targetRobotVel.heading
+        crossTrackController.targetVelocity = targetRobotVel.y
 
         // note: feedforward is processed at the wheel level
         val axialCorrection = axialController.update(0.0, currentRobotVel?.x)
-        val headingCorrection = crossTrackController.update(0.0, currentRobotVel?.y)
+        val headingCorrection = sign(targetVel.vec() dot currentPose.vec()) *
+            crossTrackController.update(0.0, currentRobotVel?.y)
 
         val correctedVelocity = targetRobotVel + Pose2d(
             axialCorrection,

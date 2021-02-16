@@ -15,7 +15,8 @@ import kotlin.math.sqrt
 /**
  * State-of-the-art path follower based on the [GuidingVectorField].
  *
- * @param constraints robot motion constraints
+ * @param maxVel maximum velocity
+ * @param maxAccel maximum acceleration
  * @param admissibleError admissible/satisfactory pose error at the end of each move
  * @param kN normal vector weight (see [GuidingVectorField])
  * @param kOmega proportional heading gain
@@ -23,7 +24,8 @@ import kotlin.math.sqrt
  * @param clock clock
  */
 class GVFFollower @JvmOverloads constructor(
-    private val constraints: SimpleMotionConstraints,
+    private val maxVel: Double,
+    private val maxAccel: Double,
     admissibleError: Pose2d,
     private val kN: Double,
     private val kOmega: Double,
@@ -62,9 +64,9 @@ class GVFFollower @JvmOverloads constructor(
         val timestamp = clock.seconds()
         val dt = timestamp - lastUpdateTimestamp
         val remainingDistance = currentPose.vec() distTo path.end().vec()
-        val maxVelToStop = sqrt(2 * constraints.maxAccel * remainingDistance)
-        val maxVelFromLast = lastVel + constraints.maxAccel * dt
-        val velocity = minOf(maxVelFromLast, maxVelToStop, constraints.maxVel)
+        val maxVelToStop = sqrt(2 * maxAccel * remainingDistance)
+        val maxVelFromLast = lastVel + maxAccel * dt
+        val velocity = minOf(maxVelFromLast, maxVelToStop, maxVel)
 
         lastUpdateTimestamp = timestamp
         lastVel = velocity
@@ -72,7 +74,7 @@ class GVFFollower @JvmOverloads constructor(
 
         val targetPose = path[gvfResult.displacement]
 
-        lastError = Kinematics.calculatePoseError(targetPose, currentPose)
+        lastError = Kinematics.calculateRobotPoseError(targetPose, currentPose)
 
         // TODO: GVF acceleration FF?
         return DriveSignal(Pose2d(velocity, 0.0, omega))

@@ -31,14 +31,19 @@ class TankPIDVAFollower @JvmOverloads constructor(
 ) : TrajectoryFollower(admissibleError, timeout, clock) {
     private val axialController = PIDFController(axialCoeffs)
     private val crossTrackController = PIDFController(crossTrackCoeffs)
+    private val headingController = PIDFController(crossTrackCoeffs)
 
     override var lastError: Pose2d = Pose2d()
+    init {
+        headingController.setInputBounds(-Math.PI, Math.PI)
+    }
 
     override fun followTrajectory(trajectory: Trajectory) {
         Log.dbgPrint("TankPIDVAFollower: followTrajectory, to reset PIDController first and call parent follower")
 
         axialController.reset()
         crossTrackController.reset()
+        headingController.reset()
 
         super.followTrajectory(trajectory)
     }
@@ -66,23 +71,30 @@ class TankPIDVAFollower @JvmOverloads constructor(
         axialController.targetPosition = poseError.x
         crossTrackController.targetPosition = poseError.y
 
+        headingController.targetPosition = poseError.heading
+
         axialController.targetVelocity = targetRobotVel.x
         crossTrackController.targetVelocity = targetRobotVel.y
+        headingController.targetVelocity = targetRobotVel.heading
 
         // note: feedforward is processed at the wheel level
         val axialCorrection = axialController.update(0.0, currentRobotVel?.x)
-        val headingCorrection = sign(targetVel.vec() dot currentPose.vec()) *
-            crossTrackController.update(0.0, currentRobotVel?.y)
+        //val headingCorrection = sign(targetVel.vec() dot currentPose.vec()) *
+        //    crossTrackController.update(0.0, currentRobotVel?.y)
+        val crossTrackCorrection = crossTrackController.update(0.0, currentRobotVel?.y)
+        val headingCorrection = headingController.update(0.0, currentRobotVel?.heading)
+
 
         val correctedVelocity = targetRobotVel + Pose2d(
             axialCorrection,
-            0.0,
+            crossTrackCorrection,
             headingCorrection
         )
 
         lastError = poseError
         Log.dbgPrint("lastPoseError: ".plus(lastError.toString()))
         Log.dbgPrint("axialCorrection: ".plus(axialCorrection.toString()))
+        Log.dbgPrint("crossTrackCorrection: ".plus(crossTrackCorrection.toString()))
         Log.dbgPrint("headingCorrection: ".plus(headingCorrection.toString()))
         return DriveSignal(correctedVelocity, targetRobotAccel)
     }

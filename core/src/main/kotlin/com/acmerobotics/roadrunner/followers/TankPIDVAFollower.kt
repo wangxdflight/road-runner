@@ -49,28 +49,30 @@ class TankPIDVAFollower @JvmOverloads constructor(
     }
 
     override fun internalUpdate(currentPose: Pose2d, currentRobotVel: Pose2d?): DriveSignal {
-        Log.dbgPrint("TankPIDVAFollower: internalUpdate");
-        Log.dbgPrint("  to get target vel, accel (fieldToRobotVelocity) from trajectory, and then targetRobotVel/Accel")
-        Log.dbgPrint("  and then calculatePoseError")
-        Log.dbgPrint("  and then position PID controller update, finally drive signal")
         val t = elapsedTime()
-
         val targetPose = trajectory[t]
         val targetVel = trajectory.velocity(t)
         val targetAccel = trajectory.acceleration(t)
+
+        Log.dbgPrint("TankPIDVAFollower: internalUpdate, elapsedTime ".plus(t.toString()));
+        Log.dbgPrint("  to get target vel, accel (fieldToRobotVelocity) from trajectory, and then targetRobotVel/Accel")
+        Log.dbgPrint("  and then calculatePoseError")
+        Log.dbgPrint("  and then position PID controller update, finally drive signal")
         Log.dbgPrint("targetPose: ".plus(targetPose.toString()))
         Log.dbgPrint("targetVel: ".plus(targetVel.toString()))
         Log.dbgPrint("targetAccel: ".plus(targetAccel.toString()))
 
         val targetRobotVel = Kinematics.fieldToRobotVelocity(targetPose, targetVel)
+        Log.dbgPrint("targetRobotVel(after Kinematics.fieldToRobotVelocity): ".plus(targetRobotVel.toString()))
+
         val targetRobotAccel = Kinematics.fieldToRobotAcceleration(targetPose, targetVel, targetAccel)
 
         val poseError = Kinematics.calculateRobotPoseError(targetPose, currentPose)
+        Log.dbgPrint("poseError: ".plus(poseError.toString()))
 
         // you can pass the error directly to PIDFController by setting setpoint = error and measurement = 0
         axialController.targetPosition = poseError.x
         crossTrackController.targetPosition = poseError.y
-
         headingController.targetPosition = poseError.heading
 
         axialController.targetVelocity = targetRobotVel.x
@@ -84,7 +86,6 @@ class TankPIDVAFollower @JvmOverloads constructor(
         val crossTrackCorrection = crossTrackController.update(0.0, currentRobotVel?.y)
         val headingCorrection = headingController.update(0.0, currentRobotVel?.heading)
 
-
         val correctedVelocity = targetRobotVel + Pose2d(
             axialCorrection,
             crossTrackCorrection,
@@ -92,7 +93,7 @@ class TankPIDVAFollower @JvmOverloads constructor(
         )
 
         lastError = poseError
-        Log.dbgPrint("lastPoseError: ".plus(lastError.toString()))
+
         Log.dbgPrint("axialCorrection: ".plus(axialCorrection.toString()))
         Log.dbgPrint("crossTrackCorrection: ".plus(crossTrackCorrection.toString()))
         Log.dbgPrint("headingCorrection: ".plus(headingCorrection.toString()))
